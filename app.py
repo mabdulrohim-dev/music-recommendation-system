@@ -3,13 +3,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
 import streamlit as st
 
-# Load dataset
-df = pd.read_csv("dataset.csv")
+# Load dataset (ganti nama file jika perlu)
+# Jika kamu rename file menjadi dataset.csv, biarkan baris ini.
+# Jika tetap pakai spotify-tracks.csv, ubah jadi "spotify-tracks.csv"
+df = pd.read_csv("spotify-tracks.csv")
 
-# Fitur yang dipakai
+# --- Penyesuaian untuk dataset asli ---
+# Kolom artist di file asli b ernama 'artists', bukan 'artist'
+# Maka kita rename kolom 'artists' menjadi 'artist' agar kode tetap berjalan
+if 'artists' in df.columns:
+    df = df.rename(columns={'artists': 'artist'})
+
+# Hapus baris yang memiliki nilai kosong pada fitur yang diperlukan
 features = ['tempo', 'energy', 'danceability', 'valence']
+df = df.dropna(subset=features + ['track_name', 'artist'])
 
-# Normalisasi
+# Normalisasi fitur
 scaler = MinMaxScaler()
 scaled = scaler.fit_transform(df[features])
 
